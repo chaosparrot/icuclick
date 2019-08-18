@@ -2,7 +2,7 @@
 import win32api
 import time
 import pyautogui
-import scipy
+import numpy
 
 pyautogui.PAUSE = 0
 pyautogui.FAILSAVE = False

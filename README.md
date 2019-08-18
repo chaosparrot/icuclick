@@ -6,7 +6,7 @@ Default processed size is 128x128 , but you can alter it by changing the process
 
 # Software requirements
 * Python 3
-* scipy
+* numpy
 * pyautogui
 * win32api for windows
 * PIL
