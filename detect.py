@@ -10,7 +10,7 @@ pyautogui.FAILSAVE = False
 state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
 state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
 
-movement_start_pic = None
+large_movement_picture = None
 movement_start_time = None
 previous_position = pyautogui.position()
 while True:

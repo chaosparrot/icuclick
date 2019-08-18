@@ -8,6 +8,8 @@ size = 128
 halfsize = 128 / 2
 
 for fileindex, file in enumerate(os.listdir( RAW_DIR )):
+	if file.find( ".png" ) < 0 :
+		continue
 	img = Image.open(RAW_DIR + file)
 	print( "Processing " + file + "..." )
 	totalSize = img.size
