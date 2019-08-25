@@ -3,6 +3,7 @@ import win32api
 import time
 import pyautogui
 import numpy
+from win32gui import WindowFromPoint, GetWindowRect
 
 pyautogui.PAUSE = 0
 pyautogui.FAILSAVE = False
@@ -13,6 +14,9 @@ state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button u
 large_movement_picture = None
 movement_start_time = None
 previous_position = pyautogui.position()
+window_bounds = GetWindowRect( WindowFromPoint( (0, 0) ) )
+window_bounds_text = '[' + ','.join(str(x) for x in window_bounds) + ']'
+
 while True:
     a = win32api.GetKeyState(0x01)
     b = win32api.GetKeyState(0x02)
@@ -20,15 +24,19 @@ while True:
     if a != state_left:  # Button state changed
         state_left = a
         pic = pyautogui.screenshot()
+		
         if a < 0:
-            pic.save('data/raw/' + str( int( time.time() * 100 ) ) + '--' + str(position[0]) + '-' + str(position[1]) + '--mousedown.png')		
+		    # Keep the window bounds only when holding down the mouse button, because the windows size can change based on releasing the mouse button
+            window_bounds = GetWindowRect( WindowFromPoint( position ) )
+            window_bounds_text = '[' + ','.join(str(x) for x in window_bounds) + ']'
+            pic.save('data/raw/' + str( int( time.time() * 100 ) ) + '--(' + str(position[0]) + '-' + str(position[1]) + ')--' + window_bounds_text + '--mousedown.png')		
             print('Saving mousedown screenshot')
         else:
-            pic.save('data/raw/' + str( int( time.time() * 100 ) ) + '--' + str(position[0]) + '-' + str(position[1]) + '--mouseup.png')
+            pic.save('data/raw/' + str( int( time.time() * 100 ) ) + '--(' + str(position[0]) + '-' + str(position[1]) + ')--' + window_bounds_text + '--mouseup.png')
             print( "Saving mouseup screenshot" )
 		
         if large_movement_picture is not None:
-            large_movement_picture.save('data/raw/' + str( int( movement_start_time * 100 ) ) + '--' + str(position[0]) + '-' + str(position[1]) + '--mousemove.png')
+            large_movement_picture.save('data/raw/' + str( int( movement_start_time * 100 ) ) + '--(' + str(position[0]) + '-' + str(position[1]) + ')--' + window_bounds_text + '--mousemove.png')
             print( "Saving mousemovement screenshot" )
             large_movement_picture = None
             movement_start_time = None
@@ -40,7 +48,6 @@ while True:
             #print('Right Button Pressed')
         #else:
             #print('Right Button Released')
-
 	
     # Large movement detection
     xDistance = numpy.linalg.norm(previous_position[0]-position[0])
